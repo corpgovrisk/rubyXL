@@ -1478,13 +1478,21 @@ class Worksheet < PrivateClass
     validate_workbook
     index = nil
 
+    file = File.open("/Users/yoda/Desktop/excel_import.txt", "w+")
     @sheet_data.each_with_index do |row, index|
-      cells_content = cells_content.map { |header| header.to_s.downcase.strip }
-      original_cells_content = row.map { |cell| cell.nil? ? '' : cell.value.to_s.downcase.strip }
+      cells_content = cells_content.map { |header| 
+        header.to_s.downcase.gsub(/\s+/, "")
+      }
+      file.write(" [D] Cells_content: #{cells_content}\n") 
+      original_cells_content = row.map { |cell| 
+        cell.nil? ? '' : cell.value.to_s.downcase.gsub(/\s+/, "")
+      }
+      file.write(" [D] original_content: #{original_cells_content}\n")
       if (cells_content & original_cells_content).size == cells_content.size
         return index
       end
     end
+    file.close
     return nil
   end
 
